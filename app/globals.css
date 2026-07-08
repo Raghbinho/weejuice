@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Segoe UI", system-ui, sans-serif;
+  --font-display: "Segoe UI", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-[#fffdf7] text-slate-800 antialiased;
+}
+
+/* Fond dégradé fruité réutilisable */
+.bg-fruity {
+  background:
+    radial-gradient(60% 50% at 80% 0%, rgba(250, 204, 21, 0.18), transparent 60%),
+    radial-gradient(50% 60% at 0% 20%, rgba(244, 63, 94, 0.14), transparent 60%),
+    radial-gradient(50% 50% at 50% 100%, rgba(132, 204, 22, 0.14), transparent 60%);
+}
+
+/* Scrollbar discrète */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-brand-200 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-brand-300;
+}
+
+/* Cache le numéro sur les inputs number pour un rendu plus propre */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

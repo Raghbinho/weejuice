@@ -1,0 +1,108 @@
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+// Formats standards proposés pour chaque jus (l'admin peut ajuster les prix ensuite).
+// Prix exprimés en Dinar Tunisien (TND) — 3 décimales.
+function formats(base) {
+  return [
+    { label: "0,5 L", liters: 0.5, price: round(base * 0.5), sortOrder: 0 },
+    { label: "1 L", liters: 1, price: round(base), sortOrder: 1 },
+    { label: "2 L", liters: 2, price: round(base * 1.9), sortOrder: 2 },
+  ];
+}
+
+// Arrondi à 3 décimales (millimes).
+function round(n) {
+  return Math.round(n * 1000) / 1000;
+}
+
+const juices = [
+  {
+    slug: "fraise",
+    name: "Jus de fraise",
+    description: "Fraises mûres pressées à la commande, douces et parfumées.",
+    color: "#f43f5e",
+    image:
+      "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=800&q=80", // smoothie fraise/fruits rouges
+    base: 5.5, // TND / litre
+
+  },
+  {
+    slug: "citron",
+    name: "Jus de citron",
+    description: "Citronnade fraîche, acidulée et désaltérante.",
+    color: "#facc15",
+    image:
+      "https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=800&q=80",
+    base: 4.5,
+  },
+  {
+    slug: "kiwi",
+    name: "Jus de kiwi",
+    description: "Kiwi vert éclatant, vitaminé et légèrement acidulé.",
+    color: "#84cc16",
+    image:
+      "https://images.unsplash.com/photo-1618897996318-5a901fa6ca71?auto=format&fit=crop&w=800&q=80", // kiwi tranché
+    base: 6,
+  },
+  {
+    slug: "orange",
+    name: "Jus d'orange",
+    description: "Oranges pressées, 100% naturel, sans sucre ajouté.",
+    color: "#fb923c",
+    image:
+      "https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=800&q=80", // verre de jus d'orange
+    base: 4.5,
+  },
+  {
+    slug: "banane",
+    name: "Jus de banane",
+    description: "Onctueux et gourmand, la banane veloutée à souhait.",
+    color: "#fde047",
+    image:
+      "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=800&q=80", // régime de bananes
+    base: 5,
+  },
+  {
+    slug: "panache",
+    name: "Jus panaché",
+    description: "Notre mélange signature multifruits, frais et surprenant.",
+    color: "#ec4899",
+    image:
+      "https://images.unsplash.com/photo-1615478503562-ec2d8aa0e24e?auto=format&fit=crop&w=800&q=80", // smoothie multifruits (panaché)
+    base: 6.5,
+  },
+];
+
+async function main() {
+  for (const [i, j] of juices.entries()) {
+    await prisma.juice.upsert({
+      where: { slug: j.slug },
+      update: {
+        name: j.name,
+        description: j.description,
+        color: j.color,
+        image: j.image,
+        sortOrder: i,
+      },
+      create: {
+        slug: j.slug,
+        name: j.name,
+        description: j.description,
+        color: j.color,
+        image: j.image,
+        sortOrder: i,
+        formats: { create: formats(j.base) },
+      },
+    });
+  }
+  console.log("✅ Seed terminé :", juices.length, "jus créés/mis à jour.");
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => prisma.$disconnect());

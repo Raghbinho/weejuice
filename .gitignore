@@ -1,0 +1,44 @@
+# ─── Dépendances ───────────────────────────────
+node_modules
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ─── Build / sortie Next.js ─────────────────────
+.next
+out
+build
+dist
+
+# ─── Environnement (secrets — NE JAMAIS committer) ─
+.env
+.env*.local
+.env.development
+.env.production
+
+# ─── Base de données locale (SQLite) ────────────
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+
+# ─── Prisma (client généré) ─────────────────────
+node_modules/.prisma
+prisma/*.db
+
+# ─── Logs ───────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── Divers / OS / éditeurs ─────────────────────
+.DS_Store
+Thumbs.db
+*.pem
+.vercel
+.turbo
+coverage
+.idea
+.vscode/*
+!.vscode/extensions.json

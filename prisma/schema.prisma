@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Un jus vendu par la boutique
+model Juice {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  name        String
+  description String
+  color       String       // couleur d'accent (hex) pour l'UI
+  image       String       // URL de l'image
+  active      Boolean      @default(true)
+  sortOrder   Int          @default(0)
+  formats     JuiceFormat[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+// Un format (0,5L / 1L / 2L...) avec son prix pour un jus donné
+model JuiceFormat {
+  id       String  @id @default(cuid())
+  juice    Juice   @relation(fields: [juiceId], references: [id], onDelete: Cascade)
+  juiceId  String
+  label    String  // "0,5 L"
+  liters   Float   // 0.5
+  price    Float   // prix en euros
+  sortOrder Int    @default(0)
+
+  @@unique([juiceId, liters])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  reference     String      @unique // ex: WJ-2A4F9
+  firstName     String
+  lastName      String
+  phone         String
+  gouvernorat   String
+  city          String
+  address       String
+  lat           Float?
+  lng           Float?
+  note          String?
+  items         OrderItem[]
+  total         Float
+  status        String      @default("NOUVELLE") // NOUVELLE, PREPARATION, PRETE, LIVREE, ANNULEE
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+// Ligne de commande — on stocke un snapshot (nom/format/prix) pour l'historique
+model OrderItem {
+  id          String @id @default(cuid())
+  order       Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+  juiceName   String
+  formatLabel String
+  liters      Float
+  unitPrice   Float
+  quantity    Int
+  lineTotal   Float
+}
