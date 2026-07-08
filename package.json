@@ -5,7 +5,7 @@
   "description": "Boutique de jus frais - commande en ligne, paiement à la livraison",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "prisma generate && prisma db push --accept-data-loss && next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "node prisma/seed.mjs",
