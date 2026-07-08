@@ -23,12 +23,8 @@ export default function Navbar() {
           >
             Nos jus
           </Link>
-          <Link
-            href="/admin"
-            className="hidden rounded-full px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-brand-50 hover:text-brand-700 sm:block"
-          >
-            Admin
-          </Link>
+          {/* Lien Admin volontairement absent du menu : l'accès se fait en
+              tapant directement l'URL /admin (protégé par mot de passe). */}
           <Link
             href="/panier"
             className="relative flex items-center gap-2 rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-600"
